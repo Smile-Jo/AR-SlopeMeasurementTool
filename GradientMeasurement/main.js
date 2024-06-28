@@ -117,7 +117,7 @@ document.getElementById('resetButton').addEventListener('click', resetHighlights
 
 function resetHighlights() {
   // 모든 강조 표시, 선분, 삼각형 제거
-  document.querySelectorAll('.highlight, div[style*="solid rgba(0, 255, 0, 0.5)"], div[style*="rgba(0, 0, 255, 0.7)"]').forEach(el => el.remove());
+  document.querySelectorAll('.highlight, .triangle, div[style*="rgba(0, 255, 0, 0.5)"], div[style*="rgba(0, 0, 255, 0.7)"]').forEach(el => el.remove());
   points = [];
 }
 
