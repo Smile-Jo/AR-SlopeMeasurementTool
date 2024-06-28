@@ -51,11 +51,26 @@
         border-radius: 5px;
         cursor: pointer;
       }
+
+      /* dx와 dy를 표시하는 요소 스타일 */
+      #dimensionDisplay {
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px 20px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        border-radius: 5px;
+        z-index: 20;
+        display: none; /* 초기에는 숨김 */
+      }
     </style>
   </head>
   <body>
     <video id="video" autoplay playsinline></video> <!-- 카메라 피드 표시 -->
     <div class="grid-overlay"></div> <!-- 추가된 격자선 오버레이 -->
     <button id="resetButton">초기화</button> <!-- 초기화 버튼 추가 -->
+    <div id="dimensionDisplay">dx: 0px, dy: 0px</div> <!-- dx와 dy를 표시하는 요소 추가 -->
   </body>
 </html>

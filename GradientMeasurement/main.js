@@ -70,6 +70,7 @@ function handleTouch(event) {
       // 두 점이 모두 추가되면 선분과 직각삼각형 그리기
       if (points.length === 2) {
         drawLineAndTriangle(points[0], points[1]);
+        displayDimensions(points[0], points[1]);
       }
     }
   }
@@ -104,23 +105,37 @@ function drawLineAndTriangle(point1, point2) {
   triangle.style.width = '0';
   triangle.style.height = '0';
   triangle.style.borderStyle = 'solid';
+  triangle.style.zIndex = '13'; // 선분 아래
+  triangle.style.pointerEvents = 'none';
 
   if (dx * dy >= 0) { // 우상향 또는 좌하향 대각선
-    triangle.style.borderWidth = `${Math.abs(dy)}px ${Math.abs(dx)}px 0 0`;
-    triangle.style.borderColor = `rgba(0, 255, 0, 0.5) transparent transparent transparent`;
+    triangle.style.borderRight = `${Math.abs(dx)}px solid transparent`;
+    triangle.style.borderBottom = `${Math.abs(dy)}px solid rgba(0, 255, 0, 0.5)`; // 초록색 반투명
     triangle.style.top = `${Math.min(point1.y, point2.y)}px`;
     triangle.style.left = `${Math.min(point1.x, point2.x)}px`;
+    
   } else { // 우하향 또는 좌상향 대각선
-    triangle.style.borderWidth = `0 ${Math.abs(dx)}px ${Math.abs(dy)}px 0`;
-    triangle.style.borderColor = `transparent ${Math.abs(dx)}px rgba(0, 255, 0, 0.5) transparent`;
-    triangle.style.top = `${Math.max(point1.y, point2.y)}px`;
+    triangle.style.borderLeft = `${Math.abs(dx)}px solid transparent`;
+    triangle.style.borderBottom = `${Math.abs(dy)}px solid rgba(0, 255, 0, 0.5)`; // 초록색 반투명
+    triangle.style.top = `${Math.min(point1.y, point2.y)}px`;
     triangle.style.left = `${Math.min(point1.x, point2.x)}px`;
   }
 
-  triangle.style.zIndex = '13'; // 선분 아래
-  triangle.style.pointerEvents = 'none';
-  triangle.classList.add('triangle'); // 삼각형 요소에 클래스 추가
   document.body.appendChild(triangle);
+}
+
+// dx와 dy를 화면에 표시하는 함수
+function displayDimensions(point1, point2) {
+  // 두 점의 거리 계산
+  const dx = Math.abs(point2.x - point1.x);
+  const dy = Math.abs(point2.y - point1.y);
+
+  // 디스플레이 요소 업데이트
+  const display = document.getElementById('dimensionDisplay');
+  if (display) {
+    display.textContent = `가로: ${dx/50}   세로: ${dy/50}`;
+    display.style.display = 'block'; // 요소를 표시
+  }
 }
 
 // 초기화 버튼 클릭 이벤트 리스너 추가
@@ -130,6 +145,12 @@ function resetHighlights() {
   // 모든 강조 표시, 선분, 삼각형 제거
   document.querySelectorAll('.highlight, .triangle, div[style*="rgba(0, 255, 0, 0.5)"], div[style*="rgba(0, 0, 255, 0.7)"]').forEach(el => el.remove());
   points = [];
+
+  // 디스플레이 요소 숨기기
+  const display = document.getElementById('dimensionDisplay');
+  if (display) {
+    display.style.display = 'none';
+  }
 }
 
 // 페이지 로드 시 카메라 시작
