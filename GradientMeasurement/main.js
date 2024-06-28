@@ -103,12 +103,23 @@ function drawLineAndTriangle(point1, point2) {
   triangle.style.position = 'absolute';
   triangle.style.width = '0';
   triangle.style.height = '0';
-  triangle.style.borderLeft = `${Math.abs(dx)}px solid transparent`;
-  triangle.style.borderBottom = `${Math.abs(dy)}px solid rgba(0, 255, 0, 0.5)`; // 초록색 반투명
-  triangle.style.top = `${Math.min(point1.y, point2.y)}px`;
-  triangle.style.left = `${Math.min(point1.x, point2.x)}px`;
+  triangle.style.borderStyle = 'solid';
+
+  if (dx * dy >= 0) { // 우상향 또는 좌하향 대각선
+    triangle.style.borderWidth = `${Math.abs(dy)}px ${Math.abs(dx)}px 0 0`;
+    triangle.style.borderColor = `rgba(0, 255, 0, 0.5) transparent transparent transparent`;
+    triangle.style.top = `${Math.min(point1.y, point2.y)}px`;
+    triangle.style.left = `${Math.min(point1.x, point2.x)}px`;
+  } else { // 우하향 또는 좌상향 대각선
+    triangle.style.borderWidth = `0 ${Math.abs(dx)}px ${Math.abs(dy)}px 0`;
+    triangle.style.borderColor = `transparent ${Math.abs(dx)}px rgba(0, 255, 0, 0.5) transparent`;
+    triangle.style.top = `${Math.max(point1.y, point2.y)}px`;
+    triangle.style.left = `${Math.min(point1.x, point2.x)}px`;
+  }
+
   triangle.style.zIndex = '13'; // 선분 아래
   triangle.style.pointerEvents = 'none';
+  triangle.classList.add('triangle'); // 삼각형 요소에 클래스 추가
   document.body.appendChild(triangle);
 }
 
