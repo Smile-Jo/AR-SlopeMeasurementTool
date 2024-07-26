@@ -54,8 +54,8 @@ function handleTouch(event) {
       highlight.style.height = '20px';
       highlight.style.backgroundColor = 'rgba(255, 0, 0, 0.7)'; // 빨간색 반투명
       highlight.style.borderRadius = '50%';
-      highlight.style.top = `${snappedY - 10}px`; // 중심 맞추기 위해 -10
-      highlight.style.left = `${snappedX - 10}px`; // 중심 맞추기 위해 -10
+      highlight.style.top = `${snappedY - 9.5}px`; // 중심 맞추기 위해 -10
+      highlight.style.left = `${snappedX - 9.5}px`; // 중심 맞추기 위해 -10
       highlight.style.pointerEvents = 'none'; // 이벤트 방해 안 하도록
       highlight.style.zIndex = '15'; // 격자선 위에 강조 표시
       highlight.setAttribute('data-x', snappedX);
@@ -90,6 +90,10 @@ function drawLineAndTriangle(point1, point2) {
   const dy = point2.y - point1.y;
   const length = Math.sqrt(dx * dx + dy * dy);
 
+  // 터치 좌표를 근접한 격자 점으로 스냅
+  const snappedX = Math.round(touchX / gridSize) * gridSize;
+  const snappedY = Math.round(touchY / gridSize) * gridSize;
+
   // 선분의 위치 및 크기 설정
   line.style.width = `${length}px`;
   line.style.height = '2px';
@@ -104,7 +108,7 @@ function drawLineAndTriangle(point1, point2) {
   triangle.style.position = 'absolute';
   triangle.style.width = '0';
   triangle.style.height = '0';
-  triangle.style.borderStyle = 'solid';
+  triangle.style.borderStyle = 'none';
   triangle.style.zIndex = '13'; // 선분 아래
   triangle.style.pointerEvents = 'none';
 
