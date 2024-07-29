@@ -24,12 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const cylinderMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff });
     const cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
 
-    // 도형의 위치를 타겟 이미지 바로 위로 설정
-    const zOffset = 0.01; // 타겟 이미지에서 떨어진 높이 (0.01은 1cm)
-    triangle.position.set(0, 0, zOffset);
-    cylinder.position.set(baseLength / 2, heightLength / 2, zOffset);
-    cylinder.rotation.z = Math.atan2(heightLength, baseLength);
-
     // 앵커에 삼각형과 원기둥 추가
     const anchor = mindarThree.addAnchor(0);
     anchor.group.add(cylinder);
