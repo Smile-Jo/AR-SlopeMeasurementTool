@@ -90,10 +90,6 @@ function drawLineAndTriangle(point1, point2) {
   const dy = point2.y - point1.y;
   const length = Math.sqrt(dx * dx + dy * dy);
 
-  // 터치 좌표를 근접한 격자 점으로 스냅
-  const snappedX = Math.round(touchX / gridSize) * gridSize;
-  const snappedY = Math.round(touchY / gridSize) * gridSize;
-
   // 선분의 위치 및 크기 설정
   line.style.width = `${length}px`;
   line.style.height = '2px';
