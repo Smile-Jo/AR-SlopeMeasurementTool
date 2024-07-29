@@ -6,16 +6,16 @@
     <!-- 버전이 바뀌면 아래 코드를 수정해야 함! -->
     <script type="importmap">
       {
-        "imports":{
-          "three": "https://unpkg.com/three@0.147.0/build/three.module.js",
-          "three/addons/":"https://unpkg.com/three@0.147.0/examples/jsm/",
-          "mindar-image-three":"https://cdn.jsdelivr.net/npm/mind-ar@1.2.1/dist/mindar-image-three.prod.js"
+        "imports": {
+          "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+          "mindar-image-three":"https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"
         }
       }
     </script>
 
 
-    <script src ="./Sample.js" type = "module"></script>
+    <script src ="./main.js" type = "module"></script>
     <style>
       html, body {
         position: relative;
@@ -34,10 +34,21 @@
         text-decoration: none; /* Remove underline from anchor tag */
         color: black;
       }
+      #example-scanning-overlay {
+      }
+      #example-scanning-overlay.hidden {
+        display: none;
+      }
     </style>
   </head>
 
-  <body>
+  <div>
+    <div id="example-scanning-overlay" class="hidden">
+  </div>
 
+  <body>
+    <a-scene mindar-image="imageTargetSrc: ./Target.mind; uiError:no; uiLoading:no; uiScanning:no;"/>
+    </a-scene>
   </body>
+  
 </html>
