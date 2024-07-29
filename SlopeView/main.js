@@ -28,8 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const cylinderGeometry = new THREE.CylinderGeometry(0.05, 0.05, heightLength, 32);
     const cylinderMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff });
     const cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
-    cylinder.position.set(baseLength / 2, heightLength / 2, 0);
-    cylinder.rotation.z = Math.atan2(heightLength, baseLength);
 
     // 앵커에 삼각형과 원기둥 추가
     const anchor = mindarThree.addAnchor(0);
