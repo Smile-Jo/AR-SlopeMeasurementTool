@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const triangle = new THREE.Mesh(geometry, material);
 
     // 원기둥 그리기
-    const cylinderGeometry = new THREE.CylinderGeometry(0.05, 0.05, heightLength, 32);
+    const cylinderGeometry = new THREE.CylinderGeometry(1, 1, heightLength, 3);
     const cylinderMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff });
     const cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
 
