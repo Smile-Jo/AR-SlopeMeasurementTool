@@ -138,10 +138,25 @@ function displayDimensions(point1, point2) {
   }
 }
 
+function captureScreenshot() {
+  html2canvas(document.body).then(canvas => {
+    const dataURL = canvas.toDataURL('image/png');
+
+    // Create a link element to trigger download
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'screenshot.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+}
+
 // 초기화, 직각삼각형, 길이 버튼 클릭 이벤트 리스너 추가
 document.getElementById('resetButton').addEventListener('click', resetHighlights);
 document.getElementById('triangleButton').addEventListener('click', () => drawTriangle(points[0], points[1]));
 document.getElementById('lengthButton').addEventListener('click', () => displayDimensions(points[0], points[1]));
+document.getElementById('captureButton').addEventListener('click', captureScreenshot);
 
 function resetHighlights() {
   document.querySelectorAll('.highlight, .triangle, div[style*="rgba(0, 255, 0, 0.5)"], div[style*="rgba(0, 0, 255, 0.7)"]').forEach(el => el.remove());
