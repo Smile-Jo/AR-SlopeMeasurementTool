@@ -1,6 +1,5 @@
-// main.js
-
 let points = []; // 터치된 점들을 저장
+let triangleCreated = false; // 삼각형 생성 여부 추적
 
 // 카메라 시작 함수
 async function startCamera() {
@@ -16,6 +15,9 @@ async function startCamera() {
     console.error('Error accessing camera:', error);
   }
 }
+
+// 페이지 로드 시 카메라 시작
+window.addEventListener('load', startCamera);
 
 // 화면에 터치 이벤트 리스너 추가
 document.addEventListener('touchstart', handleTouch);
@@ -54,8 +56,8 @@ function handleTouch(event) {
       highlight.style.height = '20px';
       highlight.style.backgroundColor = 'rgba(255, 0, 0, 0.7)'; // 빨간색 반투명
       highlight.style.borderRadius = '50%';
-      highlight.style.top = `${snappedY - 9.5}px`; // 중심 맞추기 위해 -10
-      highlight.style.left = `${snappedX - 9.5}px`; // 중심 맞추기 위해 -10
+      highlight.style.top = `${snappedY - 9.5}px`; // 중심 맞추기 
+      highlight.style.left = `${snappedX - 9.5}px`; // 중심 맞추기
       highlight.style.pointerEvents = 'none'; // 이벤트 방해 안 하도록
       highlight.style.zIndex = '15'; // 격자선 위에 강조 표시
       highlight.setAttribute('data-x', snappedX);
@@ -67,30 +69,25 @@ function handleTouch(event) {
       // points 배열에 추가
       points.push({ x: snappedX, y: snappedY });
 
-      // 두 점이 모두 추가되면 선분과 직각삼각형 그리기
+      // 두 점이 모두 추가되면 선분을 그리기
       if (points.length === 2) {
-        drawLineAndTriangle(points[0], points[1]);
-        displayDimensions(points[0], points[1]);
+        drawLine(points[0], points[1]);
       }
     }
   }
 }
 
-// 선분과 직각삼각형 그리기 함수
-function drawLineAndTriangle(point1, point2) {
-  // 선분 그리기
+function drawLine(point1, point2) {
   const line = document.createElement('div');
   line.style.position = 'absolute';
   line.style.backgroundColor = 'rgba(0, 0, 255, 0.7)'; // 파란색 반투명
   line.style.zIndex = '14'; // 강조 표시 아래
   line.style.pointerEvents = 'none';
 
-  // 두 점의 거리 계산
   const dx = point2.x - point1.x;
   const dy = point2.y - point1.y;
   const length = Math.sqrt(dx * dx + dy * dy);
 
-  // 선분의 위치 및 크기 설정
   line.style.width = `${length}px`;
   line.style.height = '2px';
   line.style.top = `${point1.y}px`;
@@ -98,8 +95,14 @@ function drawLineAndTriangle(point1, point2) {
   line.style.transformOrigin = '0 0'; // 변환 원점 설정
   line.style.transform = `rotate(${Math.atan2(dy, dx)}rad)`;
   document.body.appendChild(line);
+}
 
-  // 직각삼각형 그리기
+function drawTriangle(point1, point2) {
+  if (triangleCreated) return; // 삼각형이 이미 생성되었으면 더 이상 생성하지 않음
+
+  const dx = point2.x - point1.x;
+  const dy = point2.y - point1.y;
+
   const triangle = document.createElement('div');
   triangle.style.position = 'absolute';
   triangle.style.width = '0';
@@ -113,7 +116,6 @@ function drawLineAndTriangle(point1, point2) {
     triangle.style.borderBottom = `${Math.abs(dy)}px solid rgba(0, 255, 0, 0.5)`; // 초록색 반투명
     triangle.style.top = `${Math.min(point1.y, point2.y)}px`;
     triangle.style.left = `${Math.min(point1.x, point2.x)}px`;
-    
   } else { // 우하향 또는 좌상향 대각선
     triangle.style.borderLeft = `${Math.abs(dx)}px solid transparent`;
     triangle.style.borderBottom = `${Math.abs(dy)}px solid rgba(0, 255, 0, 0.5)`; // 초록색 반투명
@@ -122,36 +124,32 @@ function drawLineAndTriangle(point1, point2) {
   }
 
   document.body.appendChild(triangle);
+  triangleCreated = true; // 삼각형이 생성되었음을 표시
 }
 
-// dx와 dy를 화면에 표시하는 함수
 function displayDimensions(point1, point2) {
-  // 두 점의 거리 계산
   const dx = Math.abs(point2.x - point1.x);
   const dy = Math.abs(point2.y - point1.y);
 
-  // 디스플레이 요소 업데이트
   const display = document.getElementById('dimensionDisplay');
   if (display) {
-    display.textContent = `가로: ${dx/50}   세로: ${dy/50}`;
+    display.textContent = `가로: ${dx / 50}   세로: ${dy / 50}`;
     display.style.display = 'block'; // 요소를 표시
   }
 }
 
-// 초기화 버튼 클릭 이벤트 리스너 추가
+// 초기화, 직각삼각형, 길이 버튼 클릭 이벤트 리스너 추가
 document.getElementById('resetButton').addEventListener('click', resetHighlights);
+document.getElementById('triangleButton').addEventListener('click', () => drawTriangle(points[0], points[1]));
+document.getElementById('lengthButton').addEventListener('click', () => displayDimensions(points[0], points[1]));
 
 function resetHighlights() {
-  // 모든 강조 표시, 선분, 삼각형 제거
   document.querySelectorAll('.highlight, .triangle, div[style*="rgba(0, 255, 0, 0.5)"], div[style*="rgba(0, 0, 255, 0.7)"]').forEach(el => el.remove());
   points = [];
+  triangleCreated = false; // 초기화 시 삼각형 생성 상태도 리셋
 
-  // 디스플레이 요소 숨기기
   const display = document.getElementById('dimensionDisplay');
   if (display) {
     display.style.display = 'none';
   }
 }
-
-// 페이지 로드 시 카메라 시작
-window.addEventListener('load', startCamera);
