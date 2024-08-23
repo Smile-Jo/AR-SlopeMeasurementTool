@@ -1,6 +1,20 @@
 import * as THREE from 'three';
 import { MindARThree } from 'mindar-image-three';
 
+function captureScreenshot() {
+  html2canvas(document.body).then(canvas => {
+    const dataURL = canvas.toDataURL('image/png');
+
+    // Create a link element to trigger download
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'screenshot.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   const start = async () => {
     // 학생들이 입력한 길이 값을 받아옴
@@ -52,3 +66,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 스타트 버튼 이벤트 리스너
   document.getElementById('startButton').addEventListener('click', start);
 });
+
+document.getElementById('captureButton').addEventListener('click', captureScreenshot);
