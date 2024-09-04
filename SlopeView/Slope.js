@@ -18,6 +18,7 @@ function captureScreenshot() {
   // 캔버스의 나머지 DOM 요소들을 html2canvas로 그리기
   html2canvas(document.body, {
     backgroundColor: null,
+    height: document.body.scrollHeight // 화면 높이에 맞추기
   }).then(domCanvas => {
     // 비디오 위에 나머지 DOM 요소들을 그리기
     context.drawImage(domCanvas, 0, 0, videoWidth, videoHeight);
