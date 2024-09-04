@@ -2,10 +2,24 @@ import * as THREE from 'three';
 import { MindARThree } from 'mindar-image-three';
 
 function captureScreenshot() {
-  html2canvas(document.body).then(canvas => {
-    const dataURL = canvas.toDataURL('image/png');
+  const videoElement = document.getElementById('video'); // 비디오 요소 가져오기
 
-    // Create a link element to trigger download
+  // Create a canvas element to match video size
+  const canvas = document.createElement('canvas');
+  canvas.width = videoElement.videoWidth;
+  canvas.height = videoElement.videoHeight;
+  const context = canvas.getContext('2d');
+
+  // Draw the video frame onto the canvas
+  context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+  // Capture the rest of the body elements using html2canvas and draw them on the same canvas
+  html2canvas(document.body, {backgroundColor: null}).then(domCanvas => {
+    // Draw the DOM elements on top of the video
+    context.drawImage(domCanvas, 0, 0);
+
+    // Convert the final canvas to a data URL and trigger download
+    const dataURL = canvas.toDataURL('image/png');
     const link = document.createElement('a');
     link.href = dataURL;
     link.download = 'screenshot.png';
@@ -14,6 +28,7 @@ function captureScreenshot() {
     document.body.removeChild(link);
   });
 }
+
 
 document.addEventListener('DOMContentLoaded', async () => {
   const start = async () => {
