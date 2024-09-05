@@ -31,9 +31,9 @@ function handleTouch(event) {
   const touchX = touch.clientX;
   const touchY = touch.clientY;
 
-  // 격자 점 크기 및 간격 (index.html의 .grid-overlay의 background-size와 일치해야 함)
+  // 격자 점 크기 및 간격
   const gridSize = 50; // 격자 크기
-  const tolerance = 20; // 터치 좌표와 격자 점 사이의 허용 오차 증가
+  const tolerance = 20; // 터치 좌표와 격자 점 사이의 허용 오차
 
   // 터치 좌표를 근접한 격자 점으로 스냅
   const snappedX = Math.round(touchX / gridSize) * gridSize;
@@ -54,12 +54,12 @@ function handleTouch(event) {
       highlight.style.position = 'absolute';
       highlight.style.width = '20px';
       highlight.style.height = '20px';
-      highlight.style.backgroundColor = 'rgba(255, 0, 0, 0.7)'; // 빨간색 반투명
+      highlight.style.backgroundColor = 'rgba(255, 0, 0, 0.7)';
       highlight.style.borderRadius = '50%';
-      highlight.style.top = `${snappedY - 9.5}px`; // 중심 맞추기 
-      highlight.style.left = `${snappedX - 9.5}px`; // 중심 맞추기
-      highlight.style.pointerEvents = 'none'; // 이벤트 방해 안 하도록
-      highlight.style.zIndex = '15'; // 격자선 위에 강조 표시
+      highlight.style.top = `${snappedY - 9.5}px`;
+      highlight.style.left = `${snappedX - 9.5}px`;
+      highlight.style.pointerEvents = 'none'; 
+      highlight.style.zIndex = '15';
       highlight.setAttribute('data-x', snappedX);
       highlight.setAttribute('data-y', snappedY);
 
@@ -89,12 +89,15 @@ function drawLine(point1, point2) {
   const length = Math.sqrt(dx * dx + dy * dy);
 
   line.style.width = `${length}px`;
-  line.style.height = '2px';
+  line.style.height = '3px';
   line.style.top = `${point1.y}px`;
   line.style.left = `${point1.x}px`;
-  line.style.transformOrigin = '0 0'; // 변환 원점 설정
+  line.style.transformOrigin = '0 0';
   line.style.transform = `rotate(${Math.atan2(dy, dx)}rad)`;
   document.body.appendChild(line);
+
+  // 선분이 그려진 후 triangleButton을 표시
+  document.getElementById('triangleButton').style.display = 'block';
 }
 
 function drawTriangle(point1, point2) {
@@ -111,12 +114,12 @@ function drawTriangle(point1, point2) {
   triangle.style.zIndex = '13'; // 선분 아래
   triangle.style.pointerEvents = 'none';
 
-  if (dx * dy >= 0) { // 우상향 또는 좌하향 대각선
+  if (dx * dy >= 0) {
     triangle.style.borderRight = `${Math.abs(dx)}px solid transparent`;
     triangle.style.borderBottom = `${Math.abs(dy)}px solid rgba(0, 255, 0, 0.5)`; // 초록색 반투명
     triangle.style.top = `${Math.min(point1.y, point2.y)}px`;
     triangle.style.left = `${Math.min(point1.x, point2.x)}px`;
-  } else { // 우하향 또는 좌상향 대각선
+  } else {
     triangle.style.borderLeft = `${Math.abs(dx)}px solid transparent`;
     triangle.style.borderBottom = `${Math.abs(dy)}px solid rgba(0, 255, 0, 0.5)`; // 초록색 반투명
     triangle.style.top = `${Math.min(point1.y, point2.y)}px`;
@@ -124,7 +127,54 @@ function drawTriangle(point1, point2) {
   }
 
   document.body.appendChild(triangle);
+
+  // 삼각형의 밑변과 높이에 강조 선 추가
+  drawBaseLine(point1, point2);
+  drawHeightLine(point1, point2);
+
   triangleCreated = true; // 삼각형이 생성되었음을 표시
+
+  // 삼각형이 그려진 후 lengthButton을 표시
+  document.getElementById('lengthButton').style.display = 'block';
+}
+
+function drawBaseLine(point1, point2) {
+  const baseLine = document.createElement('div');
+  baseLine.classList.add('base-line'); // 클래스 추가
+  baseLine.style.position = 'absolute';
+  baseLine.style.backgroundColor = 'yellow'; // 노란색 선
+  baseLine.style.zIndex = '14';
+  baseLine.style.pointerEvents = 'none';
+
+  const dx = point2.x - point1.x;
+  const length = Math.abs(dx);
+
+  baseLine.style.width = `${length}px`;
+  baseLine.style.height = '3px';
+  baseLine.style.top = `${Math.max(point1.y, point2.y)}px`;
+  baseLine.style.left = `${Math.min(point1.x, point2.x)}px`;
+
+  document.body.appendChild(baseLine);
+}
+
+function drawHeightLine(point1, point2) {
+  const heightLine = document.createElement('div');
+  heightLine.classList.add('height-line'); // 클래스 추가
+  heightLine.style.position = 'absolute';
+  heightLine.style.backgroundColor = 'red'; // 빨간색 선
+  heightLine.style.zIndex = '14';
+  heightLine.style.pointerEvents = 'none';
+
+  const dy = Math.abs(point2.y - point1.y);
+
+  heightLine.style.width = '3px';
+  heightLine.style.height = `${dy}px`;
+  heightLine.style.top = `${Math.min(point1.y, point2.y)}px`;
+
+  const lowerYPointX = point1.y < point2.y ? point1.x : point2.x;
+  heightLine.style.left = `${lowerYPointX}px`;
+
+  document.body.appendChild(heightLine);
 }
 
 function displayDimensions(point1, point2) {
@@ -133,10 +183,15 @@ function displayDimensions(point1, point2) {
 
   const display = document.getElementById('dimensionDisplay');
   if (display) {
-    display.textContent = `가로: ${dx / 50}   세로: ${dy / 50}`;
+    // 수평 거리와 수직 거리 각각을 span으로 스타일링
+    display.innerHTML = `
+      수평 거리: <span style="color: yellow;">${(dx / 50)}</span> 
+      &nbsp;&nbsp; 수직 거리: <span style="color: red;">${(dy / 50)}</span>
+    `;
     display.style.display = 'block'; // 요소를 표시
   }
 }
+
 
 function captureScreenshot() {
   html2canvas(document.body).then(canvas => {
@@ -154,7 +209,6 @@ function captureScreenshot() {
   });
 }
 
-
 // 초기화, 직각삼각형, 길이 버튼 클릭 이벤트 리스너 추가
 document.getElementById('resetButton').addEventListener('click', resetHighlights);
 document.getElementById('triangleButton').addEventListener('click', () => drawTriangle(points[0], points[1]));
@@ -162,7 +216,9 @@ document.getElementById('lengthButton').addEventListener('click', () => displayD
 document.getElementById('captureButton').addEventListener('click', captureScreenshot);
 
 function resetHighlights() {
-  document.querySelectorAll('.highlight, .triangle, div[style*="rgba(0, 255, 0, 0.5)"], div[style*="rgba(0, 0, 255, 0.7)"]').forEach(el => el.remove());
+  // 기존 요소들 제거
+  document.querySelectorAll('.highlight, .triangle, div[style*="rgba(0, 255, 0, 0.5)"], div[style*="rgba(0, 0, 255, 0.7)"], .base-line, .height-line').forEach(el => el.remove());
+  
   points = [];
   triangleCreated = false; // 초기화 시 삼각형 생성 상태도 리셋
 
@@ -170,4 +226,8 @@ function resetHighlights() {
   if (display) {
     display.style.display = 'none';
   }
+
+  // 버튼 초기 상태로 숨김
+  document.getElementById('triangleButton').style.display = 'none';
+  document.getElementById('lengthButton').style.display = 'none';
 }
