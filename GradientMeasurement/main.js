@@ -139,10 +139,32 @@ function displayDimensions(point1, point2) {
 }
 
 function captureScreenshot() {
-  html2canvas(document.body).then(canvas => {
-    const dataURL = canvas.toDataURL('image/png');
+  const videoElement = document.getElementById('video'); // 비디오 요소 가져오기
 
-    // Create a link element to trigger download
+  // 비디오 요소의 원본 크기와 비율 가져오기
+  const videoWidth = videoElement.videoWidth;
+  const videoHeight = videoElement.videoHeight;
+
+  // 비디오의 비율에 맞춘 캔버스 생성
+  const canvas = document.createElement('canvas');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const context = canvas.getContext('2d');
+
+  // 비디오 프레임을 캔버스에 그리기 (비율 유지)
+  context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+  // DOM 요소 캡처
+  html2canvas(document.body, {
+    backgroundColor: null,
+    width: document.body.scrollWidth,
+    height: document.body.scrollHeight
+  }).then(domCanvas => {
+    // 비디오 위에 DOM 요소 그리기
+    context.drawImage(domCanvas, 0, 0, canvas.width, canvas.height);
+
+    // 최종 이미지를 PNG로 변환하여 다운로드
+    const dataURL = canvas.toDataURL('image/png');
     const link = document.createElement('a');
     link.href = dataURL;
     link.download = 'screenshot.png';
