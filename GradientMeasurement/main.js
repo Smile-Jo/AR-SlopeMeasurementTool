@@ -141,25 +141,32 @@ function displayDimensions(point1, point2) {
 function captureScreenshot() {
   const videoElement = document.getElementById('video'); // 비디오 요소 가져오기
 
-  // 비디오의 원본 비율을 사용한 캔버스 크기 설정
+  // 전체 화면 크기와 비율에 맞게 캔버스 설정
   const canvas = document.createElement('canvas');
   const videoWidth = videoElement.videoWidth;
   const videoHeight = videoElement.videoHeight;
-  canvas.width = videoWidth;
-  canvas.height = videoHeight;
+
+  // 비디오 크기에 맞춰 캔버스 크기를 설정 (혹은 전체 화면 크기를 기준으로 설정 가능)
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
   const context = canvas.getContext('2d');
 
   // 비디오 프레임을 캔버스에 그리기 (비율 그대로 유지)
-  context.drawImage(videoElement, 0, 0, videoWidth, videoHeight);
+  context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
 
-  // 캔버스의 나머지 DOM 요소들을 html2canvas로 그리기
+  // DOM 요소를 캡처한 뒤 비디오 위에 그리기
   html2canvas(document.body, {
     backgroundColor: null,
-    width: document.body.scrollWidth, // 화면 너비에 맞추기
-    height: document.body.scrollHeight // 화면 높이에 맞추기
+    scale: 1, // 캡처할 때 확대 방지
+    width: window.innerWidth, // 현재 창 너비에 맞춤
+    height: window.innerHeight, // 현재 창 높이에 맞춤
+    scrollX: 0, // 스크롤 위치 초기화
+    scrollY: 0, // 스크롤 위치 초기화
+    windowWidth: document.documentElement.scrollWidth, // 문서 전체 너비
+    windowHeight: document.documentElement.scrollHeight // 문서 전체 높이
   }).then(domCanvas => {
-    // 비디오 위에 나머지 DOM 요소들을 그리기
-    context.drawImage(domCanvas, 0, 0, videoWidth, videoHeight);
+    // 비디오 위에 DOM 요소들을 그리기
+    context.drawImage(domCanvas, 0, 0, canvas.width, canvas.height);
 
     // 캔버스를 이미지로 변환하여 다운로드
     const dataURL = canvas.toDataURL('image/png');
