@@ -1,41 +1,6 @@
 import * as THREE from 'three';
 import { MindARThree } from 'mindar-image-three';
 
-function captureScreenshot() {
-  const videoElement = document.getElementById('video'); // 비디오 요소 가져오기
-
-  // 비디오의 원본 비율을 사용한 캔버스 크기 설정
-  const canvas = document.createElement('canvas');
-  const videoWidth = videoElement.videoWidth;
-  const videoHeight = videoElement.videoHeight;
-  canvas.width = videoWidth;
-  canvas.height = videoHeight;
-  const context = canvas.getContext('2d');
-
-  // 비디오 프레임을 캔버스에 그리기 (비율 그대로 유지)
-  context.drawImage(videoElement, 0, 0, videoWidth, videoHeight);
-
-  // 캔버스의 나머지 DOM 요소들을 html2canvas로 그리기
-  html2canvas(document.body, {
-    backgroundColor: null,
-    height: document.body.scrollHeight // 화면 높이에 맞추기
-  }).then(domCanvas => {
-    // 비디오 위에 나머지 DOM 요소들을 그리기
-    context.drawImage(domCanvas, 0, 0, videoWidth, videoHeight);
-
-    // 캔버스를 이미지로 변환하여 다운로드
-    const dataURL = canvas.toDataURL('image/png');
-    const link = document.createElement('a');
-    link.href = dataURL;
-    link.download = 'screenshot.png';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  });
-}
-
-
-
 document.addEventListener('DOMContentLoaded', async () => {
   const start = async () => {
     // 학생들이 입력한 길이 값을 받아옴
@@ -87,5 +52,3 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 스타트 버튼 이벤트 리스너
   document.getElementById('startButton').addEventListener('click', start);
 });
-
-document.getElementById('captureButton').addEventListener('click', captureScreenshot);
