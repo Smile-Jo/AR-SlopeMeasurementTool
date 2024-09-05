@@ -2,16 +2,19 @@ import * as THREE from 'three';
 import { MindARThree } from 'mindar-image-three';
 
 document.addEventListener('DOMContentLoaded', () => {
-  const startButton = document.getElementById('startButton');
+  console.log("JavaScript Loaded and DOM Ready!"); // Debugging log
 
+  const startButton = document.getElementById('startButton');
   startButton.addEventListener('click', async () => {
-    // 학생들이 입력한 길이 값을 받아옴
+    console.log("Start Button Clicked!"); // Debugging log
+
+    // 입력된 가로, 세로 길이를 가져옴
     const baseLength = parseFloat(document.getElementById('baseLength').value);
     const heightLength = parseFloat(document.getElementById('heightLength').value);
 
-    // 유효성 검사 (길이 값이 유효하지 않을 경우 실행 중지)
+    // 입력 값 유효성 검사
     if (isNaN(baseLength) || isNaN(heightLength) || baseLength <= 0 || heightLength <= 0) {
-      alert('가로 길이와 세로 길이를 제대로 입력해주세요.');
+      alert('가로 길이와 세로 길이를 정확히 입력해주세요.');
       return;
     }
 

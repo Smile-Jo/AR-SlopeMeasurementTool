@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script async src="https://unpkg.com/ed-module-shims@1.6.3/dist/es-module-shims.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
     <script type="importmap">
       {
         "imports": {
@@ -19,82 +18,84 @@
     <script src="./Slope.js" type="module" defer></script>
     
     <style>
-        html, body {
-            position: relative;
-            margin: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            font-family: 'Arial', sans-serif;
-            background-color: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+      html, body {
+        position: relative;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: 'Arial', sans-serif;
+        background-color: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-        .input-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
+      .input-container {
+        position: relative; /* Ensure it stays on top */
+        z-index: 10; /* Higher than #container */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
 
-        input[type="number"] {
-            width: 200px;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
-        }
+      input[type="number"] {
+        width: 200px;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: border-color 0.3s ease;
+      }
 
-        input[type="number"]:focus {
-            border-color: #4CAF50;
-            outline: none;
-        }
+      input[type="number"]:focus {
+        border-color: #4CAF50;
+        outline: none;
+      }
 
-        button {
-            width: 220px;
-            padding: 12px;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+      button {
+        width: 220px;
+        padding: 12px;
+        background-color: #4CAF50;
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
 
-        button:hover {
-            background-color: #45a049;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
+      button:hover {
+        background-color: #45a049;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
 
-        #container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
+      #container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
 
     <div class="input-container">
-        <h2>경사로 길이 설정</h2>
-        <input type="number" id="baseLength" placeholder="가로 길이 (예: 100)" min="1">
-        <input type="number" id="heightLength" placeholder="세로 길이 (예: 50)" min="1">
-        <button id="startButton">시작</button>
+      <h2>경사로 길이 설정</h2>
+      <input type="number" id="baseLength" placeholder="가로 길이 (예: 100)" min="1">
+      <input type="number" id="heightLength" placeholder="세로 길이 (예: 50)" min="1">
+      <button id="startButton">시작</button>
     </div>
 
     <div id="container"></div>
 
-</body>
+  </body>
 </html>
