@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const shape = new THREE.Shape();
     shape.moveTo(0, 0);  // 첫 번째 꼭짓점
     shape.lineTo(baseLength, 0);  // 두 번째 꼭짓점 (직각점)
-    shape.lineTo(0, heightLength);  // 세 번째 꼭짓점
+    shape.lineTo(baseLength, heightLength);  // 세 번째 꼭짓점
     shape.lineTo(0, 0);  // 삼각형 닫기
 
     const geometry1 = new THREE.PlaneGeometry(baseLength, 1);
@@ -57,6 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     plane3.position.set(0, 0, heightLength / 2); // Position plane3 correctly
     plane3.rotation.y = -Math.atan2(heightLength, baseLength); // Rotate the hypotenuse
+
+    triangle2.rotation.x = THREE.MathUtils.degToRad(90);
 
     const anchor = mindarThree.addAnchor(0);
     // anchor.group.add(plane1);
