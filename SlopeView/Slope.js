@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
   startButton.addEventListener('click', async () => {
     console.log("Start Button Clicked!"); // Debugging log
 
+    // Hide the input container when AR starts
+    document.querySelector('.input-container').style.display = 'none';
+
     // 입력된 가로, 세로 길이를 가져옴
     const baseLength = parseFloat(document.getElementById('baseLength').value);
     const heightLength = parseFloat(document.getElementById('heightLength').value);
@@ -21,9 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 빗변 길이 계산
     const hypotenuseLength = Math.sqrt(baseLength * baseLength + heightLength * heightLength);
 
-    // MindAR 초기화 (use a container div instead of document.body)
+    // MindAR 초기화
     const mindarThree = new MindARThree({
-      container: document.getElementById('container'),  // Make sure you have an element with this ID in your HTML
+      container: document.getElementById('container'),
       imageTargetSrc: './Target.mind'
     });
     const { renderer, scene, camera } = mindarThree;
