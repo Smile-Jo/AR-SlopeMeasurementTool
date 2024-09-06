@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     plane2.rotation.y = THREE.MathUtils.degToRad(90); // 90 degree rotation along the y-axis
 
     plane3.position.set(baseLength / 2, 0, heightLength / 2); // Position plane3 correctly
-    plane3.rotation.z = -Math.atan2(heightLength, baseLength); // Rotate the hypotenuse
+    plane3.rotation.y = -Math.atan2(heightLength, baseLength); // Rotate the hypotenuse
 
     const anchor = mindarThree.addAnchor(0);
     anchor.group.add(plane1);
