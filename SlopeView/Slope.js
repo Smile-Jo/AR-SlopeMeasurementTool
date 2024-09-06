@@ -2,60 +2,58 @@ import * as THREE from 'three';
 import { MindARThree } from 'mindar-image-three';
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log("JavaScript Loaded and DOM Ready!"); // Debugging log
+  console.log("JavaScript Loaded and DOM Ready!");
 
   const startButton = document.getElementById('startButton');
   startButton.addEventListener('click', async () => {
-    console.log("Start Button Clicked!"); // Debugging log
+    console.log("Start Button Clicked!");
 
     // Hide the input container when AR starts
     document.querySelector('.input-container').style.display = 'none';
 
-    // 입력된 가로, 세로 길이를 가져옴
+    // Get the input values
     const baseLength = parseFloat(document.getElementById('baseLength').value);
     const heightLength = parseFloat(document.getElementById('heightLength').value);
 
-    // 입력 값 유효성 검사
+    // Validate input values
     if (isNaN(baseLength) || isNaN(heightLength) || baseLength <= 0 || heightLength <= 0) {
-      alert('가로 길이와 세로 길이를 정확히 입력해주세요.');
+      alert('Please enter valid base and height values.');
       return;
     }
 
-    // 빗변 길이 계산
+    // Hypotenuse length calculation
     const hypotenuseLength = Math.sqrt(baseLength * baseLength + heightLength * heightLength);
 
-    // MindAR 초기화
+    // Initialize MindAR
     const mindarThree = new MindARThree({
-      container: document.getElementById('container'),
-      imageTargetSrc: './Target.mind'
+      container: document.getElementById('container'),  // AR rendering container
+      imageTargetSrc: './Target.mind' // Target file for image recognition
     });
     const { renderer, scene, camera } = mindarThree;
 
-    // AR object 생성
+    // AR objects
     const geometry1 = new THREE.PlaneGeometry(baseLength, 1);
     const geometry2 = new THREE.PlaneGeometry(heightLength, 1);
-    const geometry3 = new THREE.PlaneGeometry(hypotenuseLength, 1); // 빗변 평면
+    const geometry3 = new THREE.PlaneGeometry(hypotenuseLength, 1); // Hypotenuse plane
+
     const material = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.5 });
     const plane1 = new THREE.Mesh(geometry1, material);
     const plane2 = new THREE.Mesh(geometry2, material);
-    const plane3 = new THREE.Mesh(geometry3, material); // 빗변 평면
+    const plane3 = new THREE.Mesh(geometry3, material); // Hypotenuse plane
 
-    // plane1의 위치 설정 (기본 위치가 원점(0,0,0)이므로 추가적인 설정 필요 없음)
-    
-    // plane2의 위치 및 회전 설정
-    plane2.position.set(baseLength / 2, 0, heightLength / 2); // plane1의 끝에서 시작하여 수직으로 배치
-    plane2.rotation.y = THREE.MathUtils.degToRad(90); // y축 기준 90도 회전
+    // Set plane positions
+    plane2.position.set(baseLength / 2, 0, heightLength / 2); // plane1's end to start, vertically placed
+    plane2.rotation.y = THREE.MathUtils.degToRad(90); // 90 degree rotation along the y-axis
 
-    // plane3의 위치 및 회전 설정 (직각삼각형의 빗변)
-    plane3.position.set(baseLength / 2, 0, heightLength / 2); // Adjust position for hypotenuse connection
-    plane3.rotation.z = -Math.atan2(heightLength, baseLength); // Use the z-axis for the hypotenuse rotation
+    plane3.position.set(baseLength / 2, 0, heightLength / 2); // Position plane3 correctly
+    plane3.rotation.z = -Math.atan2(heightLength, baseLength); // Rotate the hypotenuse
 
     const anchor = mindarThree.addAnchor(0);
     anchor.group.add(plane1);
     anchor.group.add(plane2);
-    anchor.group.add(plane3); // plane3 추가
+    anchor.group.add(plane3);
 
-    // AR 시작
+    // Start AR and show the camera feed as the background
     await mindarThree.start();
     renderer.setAnimationLoop(() => {
       renderer.render(scene, camera);

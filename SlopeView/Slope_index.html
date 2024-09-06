@@ -30,10 +30,10 @@
         justify-content: center;
         align-items: center;
       }
-
+            
       .input-container {
-        position: relative; /* Ensure it stays on top */
-        z-index: 10; /* Higher than #container */
+        position: relative;
+        z-index: 10; /* Make sure it is above the video feed */
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -83,6 +83,7 @@
         left: 0;
         width: 100%;
         height: 100%;
+        z-index: 1; /* Camera feed is the background */
       }
     </style>
   </head>
