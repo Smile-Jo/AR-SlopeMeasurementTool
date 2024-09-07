@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.input-container').style.display = 'none';
 
     // Get the input values
-    const baseLength = parseFloat(document.getElementById('baseLength').value);
-    const heightLength = parseFloat(document.getElementById('heightLength').value);
+    const baseLength = parseFloat(document.getElementById('baseLength').value / 5);
+    const heightLength = parseFloat(document.getElementById('heightLength').value / 5);
 
     // Validate input values
     if (isNaN(baseLength) || isNaN(heightLength) || baseLength <= 0 || heightLength <= 0) {
