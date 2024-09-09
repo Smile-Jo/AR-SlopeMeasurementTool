@@ -56,7 +56,6 @@
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: background-color 0.3s;
         }
         button:hover {
@@ -65,8 +64,20 @@
 
         /* 각 버튼 위치 */
         #resetButton { top: 10px; }
-        #triangleButton { top: 70px; display: none; }
-        #lengthButton { top: 130px; display: none; }
+        #triangleButton { top: 70px; 
+            display: none;    
+            background-color: transparent; /* Make the button background transparent */
+            color: transparent; /* Make the button text transparent */
+            border: none; /* Remove border to ensure full transparency */
+            cursor: pointer; /* Ensure the button is still clickable */
+          }
+        #lengthButton { top: 130px; 
+            display: none;    
+            background-color: transparent; /* Make the button background transparent */
+            color: transparent; /* Make the button text transparent */
+            border: none; /* Remove border to ensure full transparency */
+            cursor: pointer; /* Ensure the button is still clickable */
+          }
         #captureButton { top: 190px; }
 
         /* 차원 표시 스타일 */
