@@ -43,7 +43,7 @@ function increaseGridSize() {
 // gridSize를 5px 감소시키는 함수
 function decreaseGridSize() {
   resetHighlights();  // 격자 크기 조정 전 초기화
-  if (gridSize > 5) { // 0보다 크도록 제한
+  if (gridSize > 20) { // 20보다 크도록 제한
       gridSize -= 5;
       updateGridOverlay();
   }
@@ -223,10 +223,19 @@ function displayDimensions(point1, point2) {
 
 
 function captureScreenshot() {
-  html2canvas(document.body).then(canvas => {
+  const scale = window.devicePixelRatio;  // 디바이스 픽셀 비율 적용
+
+  html2canvas(document.body, {
+    scale: scale,  // 고해상도 디바이스 대응
+    useCORS: true, // CORS 이슈 방지
+    scrollX: -window.scrollX, // 스크롤 위치 보정
+    scrollY: -window.scrollY,
+    windowWidth: document.documentElement.scrollWidth,
+    windowHeight: document.documentElement.scrollHeight
+  }).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
 
-    // Create a link element to trigger download
+    // 다운로드 링크 생성 및 다운로드 실행
     const link = document.createElement('a');
     link.href = dataURL;
     link.download = 'screenshot.png';
@@ -237,6 +246,7 @@ function captureScreenshot() {
     console.error('Screenshot capture failed:', error);
   });
 }
+
 
 // 초기화, 직각삼각형, 길이 버튼 클릭 이벤트 리스너 추가
 document.getElementById('resetButton').addEventListener('click', resetHighlights);
