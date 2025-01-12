@@ -1,5 +1,6 @@
 let points = []; // 터치된 점들을 저장
 let triangleCreated = false; // 삼각형 생성 여부 추적
+let gridSize = 50; // 초기 격자 크기
 
 // 카메라 시작 함수
 async function startCamera() {
@@ -17,7 +18,36 @@ async function startCamera() {
 }
 
 // 페이지 로드 시 카메라 시작
-window.addEventListener('load', startCamera);
+window.addEventListener('load', () => {
+  startCamera();
+  updateGridOverlay();  // 초기 그리드 적용
+});
+
+// grid-overlay의 background-size 업데이트 함수
+function updateGridOverlay() {
+  const gridOverlay = document.querySelector('.grid-overlay');
+  if (gridOverlay) {
+      gridOverlay.style.backgroundSize = `${gridSize}px ${gridSize}px`;
+  }
+}
+
+// gridSize를 5px 증가시키는 함수
+function increaseGridSize() {
+  resetHighlights();  // 격자 크기 조정 전 초기화
+  if (gridSize < 100) { // 100 이하로 제한
+      gridSize += 5;
+      updateGridOverlay();
+  }
+}
+
+// gridSize를 5px 감소시키는 함수
+function decreaseGridSize() {
+  resetHighlights();  // 격자 크기 조정 전 초기화
+  if (gridSize > 5) { // 0보다 크도록 제한
+      gridSize -= 5;
+      updateGridOverlay();
+  }
+}
 
 // 화면에 터치 이벤트 리스너 추가
 document.addEventListener('touchstart', handleTouch);
@@ -32,12 +62,11 @@ function handleTouch(event) {
   const touchY = touch.clientY;
 
   // 격자 점 크기 및 간격
-  const gridSize = 50; // 격자 크기
   const tolerance = 20; // 터치 좌표와 격자 점 사이의 허용 오차
 
   // 터치 좌표를 근접한 격자 점으로 스냅
-  const snappedX = Math.round(touchX / gridSize) * gridSize;
-  const snappedY = Math.round(touchY / gridSize) * gridSize;
+  const snappedX = Math.round(touchX / gridSize) * gridSize ;
+  const snappedY = Math.round(touchY / gridSize) * gridSize ;
 
   // 터치 좌표가 격자 점과 충분히 가까운지 확인
   if (Math.abs(touchX - snappedX) <= tolerance && Math.abs(touchY - snappedY) <= tolerance) {
@@ -185,8 +214,8 @@ function displayDimensions(point1, point2) {
   if (display) {
     // 수평 거리와 수직 거리 각각을 span으로 스타일링
     display.innerHTML = `
-      수평 거리: <span style="color: yellow;">${(dx / 50)}</span> 
-      &nbsp;&nbsp; 수직 거리: <span style="color: red;">${(dy / 50)}</span>
+      수평 거리: <span style="color: yellow;">${(dx / gridSize)}</span> 
+      &nbsp;&nbsp; 수직 거리: <span style="color: red;">${(dy / gridSize)}</span>
     `;
     display.style.display = 'block'; // 요소를 표시
   }
@@ -214,6 +243,8 @@ document.getElementById('resetButton').addEventListener('click', resetHighlights
 document.getElementById('triangleButton').addEventListener('click', () => drawTriangle(points[0], points[1]));
 document.getElementById('lengthButton').addEventListener('click', () => displayDimensions(points[0], points[1]));
 document.getElementById('captureButton').addEventListener('click', captureScreenshot);
+document.getElementById('increaseGridButton').addEventListener('click', increaseGridSize);
+document.getElementById('decreaseGridButton').addEventListener('click', decreaseGridSize);
 
 function resetHighlights() {
   // 기존 요소들 제거
