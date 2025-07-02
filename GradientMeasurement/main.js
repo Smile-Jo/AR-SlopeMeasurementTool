@@ -2,24 +2,14 @@ let points = []; // 터치된 점들을 저장
 let triangleCreated = false; // 삼각형 생성 여부 추적
 let gridSize = 50; // 초기 격자 크기
 
-// 카메라 시작
+// 카메라 시작 함수
 async function startCamera() {
   try {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const videoDevices = devices.filter(device => device.kind === 'videoinput');
-
-    // 후면 카메라 중 첫 번째 장치를 선택
-    const backCamera = videoDevices.find(device => device.label.toLowerCase().includes('back')) || videoDevices[0];
-
     const stream = await navigator.mediaDevices.getUserMedia({
       video: {
-        deviceId: backCamera.deviceId,
-        width: { ideal: 1920 },
-        height: { ideal: 1080 },
-        facingMode: { exact: "environment" }
+        facingMode: { exact: "environment" } // 후면 카메라 사용
       }
     });
-
     const videoElement = document.getElementById('video');
     videoElement.srcObject = stream;
   } catch (error) {
@@ -232,18 +222,23 @@ function displayDimensions(point1, point2) {
 }
 
 
-// 화면에서 video 요소만 캡처
 function captureScreenshot() {
-  const videoElement = document.getElementById('video');
+  const scale = window.devicePixelRatio;  // 디바이스 픽셀 비율 적용
 
-  html2canvas(videoElement, {
-    scale: window.devicePixelRatio,
-    useCORS: true
+  html2canvas(document.body, {
+    scale: scale,  // 고해상도 디바이스 대응
+    useCORS: true, // CORS 이슈 방지
+    scrollX: -window.scrollX, // 스크롤 위치 보정
+    scrollY: -window.scrollY,
+    windowWidth: document.documentElement.scrollWidth,
+    windowHeight: document.documentElement.scrollHeight
   }).then(canvas => {
     const dataURL = canvas.toDataURL('image/png');
+
+    // 다운로드 링크 생성 및 다운로드 실행
     const link = document.createElement('a');
     link.href = dataURL;
-    link.download = 'video_screenshot.png';
+    link.download = 'screenshot.png';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
